@@ -2,6 +2,7 @@ package sliding_window;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.BiFunction;
 
 /**
  * PermutationString class.
@@ -22,6 +23,8 @@ import java.util.Map;
  * Advice: Use .equals() for comparing Integer values.
  */
 class PermutationString {
+
+    private static final BiFunction<Character, Integer, Integer> DECREMENT_OR_REMOVE = (k, v) -> v > 1 ? v - 1 : null;
 
     public boolean checkInclusion(String s1, String s2) {
         if (s1.length() > s2.length()) {
@@ -49,12 +52,7 @@ class PermutationString {
             char oldChar = s2.charAt(i - windowSize);
 
             windowCharCountMap.merge(newChar, 1, Integer::sum);
-
-            if (windowCharCountMap.get(oldChar) > 1) {
-                windowCharCountMap.put(oldChar, windowCharCountMap.get(oldChar) - 1);
-            } else {
-                windowCharCountMap.remove(oldChar);
-            }
+            windowCharCountMap.computeIfPresent(oldChar, DECREMENT_OR_REMOVE);
 
             if (charCountMap.equals(windowCharCountMap)) {
                 return true;
