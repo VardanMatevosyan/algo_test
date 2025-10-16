@@ -35,13 +35,8 @@ class PermutationString {
         Map<Character, Integer> windowCharCountMap = new HashMap<>();
         int windowSize = s1.length();
 
-        for (char c : s1.toCharArray()) {
-            charCountMap.merge(c, 1, Integer::sum);
-        }
-
-        for (int i = 0; i < windowSize; i++) {
-            windowCharCountMap.merge(s2.charAt(i), 1, Integer::sum);
-        }
+        populateCharCountMap(s1, charCountMap);
+        populateWindowCharCountMap(s2, windowSize, windowCharCountMap);
 
         if (charCountMap.equals(windowCharCountMap)) {
             return true;
@@ -51,14 +46,34 @@ class PermutationString {
             char newChar = s2.charAt(i);
             char oldChar = s2.charAt(i - windowSize);
 
-            windowCharCountMap.merge(newChar, 1, Integer::sum);
-            windowCharCountMap.computeIfPresent(oldChar, DECREMENT_OR_REMOVE);
+            increaseCharCount(windowCharCountMap, newChar);
+            decrementCharCountOrRemove(windowCharCountMap, oldChar);
 
             if (charCountMap.equals(windowCharCountMap)) {
                 return true;
             }
         }
         return false;
+    }
+
+    private void populateWindowCharCountMap(String s2, int windowSize, Map<Character, Integer> windowCharCountMap) {
+        for (int i = 0; i < windowSize; i++) {
+            increaseCharCount(windowCharCountMap, s2.charAt(i));
+        }
+    }
+
+    private void populateCharCountMap(String s1, Map<Character, Integer> charCountMap) {
+        for (char c : s1.toCharArray()) {
+            increaseCharCount(charCountMap, c);
+        }
+    }
+
+    private void decrementCharCountOrRemove(Map<Character, Integer> windowCharCountMap, char oldChar) {
+        windowCharCountMap.computeIfPresent(oldChar, DECREMENT_OR_REMOVE);
+    }
+
+    private void increaseCharCount(Map<Character, Integer> charCountMap, char newChar) {
+        charCountMap.merge(newChar, 1, Integer::sum);
     }
 
 }
