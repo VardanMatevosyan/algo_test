@@ -1,6 +1,11 @@
 package problems.array;
 
 
+import java.util.Arrays;
+
+import static java.util.Objects.isNull;
+import static org.apache.commons.lang3.StringUtils.isBlank;
+
 /**
  * Given two strings s and t, return true if t is an anagram of s, and false otherwise.
  * ------------------------------------
@@ -28,7 +33,14 @@ public class Anagram {
      * @return true if t is anagram of s, else false
      */
     public boolean isAnagram(String s, String t) {
-        throw new RuntimeException();
+        if (isBlank(s) || isBlank(t) || s.length() != t.length()) {
+            return false;
+        }
+        char[] sChars = s.toCharArray();
+        char[] tChars = t.toCharArray();
+        Arrays.sort(sChars);
+        Arrays.sort(tChars);
+        return Arrays.equals(sChars, tChars);
     }
 
 }
