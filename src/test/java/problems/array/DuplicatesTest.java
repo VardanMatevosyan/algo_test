@@ -49,9 +49,24 @@ class DuplicatesTest {
 
     @ParameterizedTest
     @MethodSource(value = "collectionPersonData")
-    public void when_PersonArrayHasDuplicates_returnTrueElseFalse(List<Person> array, boolean expected) {
-        boolean hasDuplicate = duplicates.hasDuplicate(array, p -> String.format("%s%d", p.getName(), p.getAge()));
+    public void when_PersonArrayHasDuplicates_returnTrueElseFalse(List<Person> list, boolean expected) {
+        boolean hasDuplicate = duplicates.hasDuplicate(list, p -> String.format("%s%d", p.getName(), p.getAge()));
         Assertions.assertEquals(expected, hasDuplicate);
+    }
+
+
+    public static Stream<Arguments> randomAndLexicographicalOrderData() {
+        return Stream.of(
+                Arguments.of("bcabc", "abc"),
+                Arguments.of("cbacdcbc", "acdb")
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource(value = "randomAndLexicographicalOrderData")
+    public void when_RandomStringHasDuplicates_returnLexicographicalStringWithoutDuplicate(String s, String expected) {
+        String result = duplicates.removeDuplicateLetters(s);
+        Assertions.assertEquals(expected, result);
     }
 
 
