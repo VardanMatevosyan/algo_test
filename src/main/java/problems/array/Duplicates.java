@@ -1,12 +1,17 @@
 package problems.array;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.Deque;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.ArrayDeque;
 import java.util.function.Function;
 import java.util.stream.IntStream;
 
 /**
  * Find duplicates in an array or collection.
- * Replace the exception with a solution and run test class to view the result.
  */
 public class Duplicates {
 
