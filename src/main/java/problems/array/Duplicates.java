@@ -1,8 +1,6 @@
 package problems.array;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.IntStream;
 
@@ -44,7 +42,57 @@ public class Duplicates {
      * @return string without duplicate and with the smallest in lexicographical order among all possible results
      */
     public String removeDuplicateLetters(String s) {
-        throw new RuntimeException();
+//       To solve the problem the stack + frequency + lookup technique used
+        Deque<Character> stack = new ArrayDeque<>();
+        Map<Character, Boolean> visited = new HashMap<>();
+        char[] chars = s.toCharArray();
+        Map<Character, Integer> freq = getFrequencyArray(chars);
+
+        for (char c : chars) {
+            decreaseCharFrequency(c, freq);
+            if (isIncluded(c, visited)) continue;
+
+            while (!stack.isEmpty()) {
+                Character top = stack.peek();
+                if (c < top && canBeLater(freq, top)) {
+                    stack.pop();
+                    visited.remove(top);
+                } else break;
+            }
+
+            stack.push(c);
+            visited.put(c, true);
+        }
+
+        return getResult(stack);
+    }
+
+    private static void decreaseCharFrequency(char c, Map<Character, Integer> freq) {
+        freq.computeIfPresent(c, (k, v) -> v - 1);
+    }
+
+    private static boolean canBeLater(Map<Character, Integer> frequencies, Character top) {
+        return frequencies.get(top) > 0;
+    }
+
+    private String getResult(Deque<Character> stack) {
+        StringBuilder builder = new StringBuilder();
+        while (!stack.isEmpty()) {
+            builder.append(stack.pollLast());
+        }
+        return builder.toString();
+    }
+
+    private boolean isIncluded(char c, Map<Character, Boolean> visited) {
+        return visited.containsKey(c);
+    }
+
+    private Map<Character, Integer> getFrequencyArray(char[] chars) {
+        Map<Character, Integer> frequencies = new HashMap<>();
+        for (char c : chars) {
+            frequencies.merge(c, 1, Integer::sum);
+        }
+        return frequencies;
     }
 
 
